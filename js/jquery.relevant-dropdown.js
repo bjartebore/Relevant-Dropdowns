@@ -21,13 +21,12 @@
           list_id = $input.attr('list'),
           $datalist = $("#" + list_id),
           datalistItems = $datalist.find("option"),
-
           searchPosition,
-          scrollValue = 0,
+          scrollValue = 0;
 
-          // Used to prevent reflow
-          temp_items = document.createDocumentFragment(),
-          temp_item = null;
+      // ensure autocomplete off
+      $input.prop("autocomplete", false);
+      
 
       // Insert home for new fake datalist
       $("<ul />", {
@@ -41,19 +40,29 @@
       // Update pointer
       $datalist = $("#" + list_id);
 
-      // Fill new fake datalist
-      datalistItems.each(function() {
-        temp_item = $("<li />", {
-				// .val is required here, not .text or .html
-				// HTML *needs* to be <option value="xxx"> not <option>xxx</option>  (IE)
-          "text": $(this).val()
-        })[0];
-        temp_items.appendChild(temp_item);
+      // Draw handler that can redraw the data list 
+      $input.bind("draw", function(event, data) {
+          var temp_items = document.createDocumentFragment(),
+          temp_item = null;
+            data.items.each(function() {
+            temp_item = $("<li />", {
+                    // .val is required here, not .text or .html
+                    // HTML *needs* to be <option value="xxx"> not <option>xxx</option>  (IE)
+              "text": $(this).val() || $(this).text()
+            })[0];
+            temp_items.appendChild(temp_item);
+          });
+          $datalist.empty().append(temp_items);    
       });
-      $datalist.append(temp_items);
+      
+      // trigger the first redraw
+      $input.trigger("refresh", { items : datalistItems });
 
       // Update pointer
       datalistItems = $datalist.find("li");
+
+      // make the items available for outside manipulation
+      $input.data("relevantItems", datalistItems);
 
       // Typey type type
       $input
