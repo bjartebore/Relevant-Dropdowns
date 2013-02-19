@@ -32,7 +32,7 @@
       $("<ul />", {
         "class": "datalist",
         "id"   : list_id
-      }).appendTo("body");
+      }).appendTo( $input.parent() );
 
       // Remove old datalist
       $datalist.remove();
@@ -95,11 +95,11 @@
 
       // Don't want to use :hover in CSS so doing this instead
       // really helps with arrow key navigation
-      datalistItems
-        .on("mouseenter", function() {
+      $datalist
+        .on("mouseenter", "li", function() {
           $(this).addClass("active").siblings().removeClass("active");
         })
-        .on("mouseleave", function() {
+        .on("mouseleave", "li", function() {
           $(this).removeClass("active");
         });
 
@@ -180,7 +180,7 @@
       });
 
       // When choosing from dropdown
-      datalistItems.on("click", function() {
+      $datalist.on("click", "li",function() {
         var active = $("li.active");
         if (active.length) {
           $input.val($(this).text());

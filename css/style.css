@@ -57,6 +57,9 @@ input {
 .datalist li {
 	padding: 3px;
 	font: 13px "Lucida Grande", Sans-Serif;
+	text-align: left;
+	color: black;
+	cursor: pointer;
 }
 .datalist li.active {
 	background: #3875d7;
